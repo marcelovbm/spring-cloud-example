@@ -1,14 +1,14 @@
-package com.example.restfull.websrevices.restfullwebservices.bean;
+package com.example.restfull.websrevices.restfullwebservices.model;
 
 import java.util.Date;
 
-public class UserBean {
+public class UserModel {
 
 	private Integer id;
 	private String name;
 	private Date birthDate;
 
-	public UserBean(Integer id, String name, Date birthDate) {
+	public UserModel(Integer id, String name, Date birthDate) {
 		super();
 		this.id = id;
 		this.name = name;

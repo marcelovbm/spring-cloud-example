@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.example.restfull.websrevices.restfullwebservices.bean.UserBean;
 import com.example.restfull.websrevices.restfullwebservices.dao.UserDao;
 import com.example.restfull.websrevices.restfullwebservices.exception.UserNotFoundException;
+import com.example.restfull.websrevices.restfullwebservices.model.UserModel;
 
 @RestController
 @RequestMapping(path = "/users")
@@ -30,7 +30,7 @@ public class UsersController {
 	 * @return List<UserBean>
 	 */
 	@GetMapping
-	public List<UserBean> returnAllUsers() {
+	public List<UserModel> returnAllUsers() {
 		return userDao.findAll();
 	}
 
@@ -42,8 +42,8 @@ public class UsersController {
 	 * @return {@link UserBean}
 	 */
 	@GetMapping(path = "/{id}")
-	public UserBean returnUser(@PathVariable Integer id) {
-		UserBean userBean = userDao.findUser(id);
+	public UserModel returnUser(@PathVariable Integer id) {
+		UserModel userBean = userDao.findUser(id);
 		
 		if (userBean == null)
 			throw new UserNotFoundException("User not found with id " + id);
@@ -58,8 +58,8 @@ public class UsersController {
 	 * @return ResponseEntity
 	 */
 	@PostMapping
-	public ResponseEntity<Object> insertUser(@RequestBody UserBean user) {
-		UserBean userSaved = userDao.save(user);
+	public ResponseEntity<Object> insertUser(@RequestBody UserModel user) {
+		UserModel userSaved = userDao.save(user);
 
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(userSaved.getId())
 				.toUri();

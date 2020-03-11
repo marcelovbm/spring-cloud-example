@@ -7,20 +7,20 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-import com.example.restfull.websrevices.restfullwebservices.bean.UserBean;
+import com.example.restfull.websrevices.restfullwebservices.model.UserModel;
 
 @Component
 public class UserDao {
 
-	private static List<UserBean> users = new ArrayList<>();
+	private static List<UserModel> users = new ArrayList<>();
 	private int usersCount = 3;
 	private static String dateFormat = "dd/mm/yyyy";
 
 	static {
 		try {
-			users.add(new UserBean(1, "Marcelo Magrinelli", new SimpleDateFormat(dateFormat).parse("06/04/1992")));
-			users.add(new UserBean(2, "Renata Rezende", new SimpleDateFormat(dateFormat).parse("18/04/1992")));
-			users.add(new UserBean(3, "Neusa Magrinelli", new SimpleDateFormat(dateFormat).parse("08/09/1954")));
+			users.add(new UserModel(1, "Marcelo Magrinelli", new SimpleDateFormat(dateFormat).parse("06/04/1992")));
+			users.add(new UserModel(2, "Renata Rezende", new SimpleDateFormat(dateFormat).parse("18/04/1992")));
+			users.add(new UserModel(3, "Neusa Magrinelli", new SimpleDateFormat(dateFormat).parse("08/09/1954")));
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
@@ -31,7 +31,7 @@ public class UserDao {
 	 * 
 	 * @return List<UserBean>
 	 */
-	public List<UserBean> findAll() {
+	public List<UserModel> findAll() {
 		return users;
 	}
 
@@ -42,14 +42,14 @@ public class UserDao {
 	 * @param id Identification of a UserBean.
 	 * @return UserBean
 	 */
-	public UserBean findUser(Integer id) {
+	public UserModel findUser(Integer id) {
 		return users.stream().filter(user -> id.equals(user.getId())).findAny().orElse(null);
 	}
 
 	/*
 	 * This method is responsible to save the UserBean in the db.
 	 */
-	public UserBean save(UserBean user) {
+	public UserModel save(UserModel user) {
 		if (user.getId() == null)
 			user.setId(++usersCount);
 

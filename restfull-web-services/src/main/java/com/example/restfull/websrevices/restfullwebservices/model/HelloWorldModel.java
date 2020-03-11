@@ -1,10 +1,10 @@
-package com.example.restfull.websrevices.restfullwebservices.bean;
+package com.example.restfull.websrevices.restfullwebservices.model;
 
-public class HelloWorldBean {
+public class HelloWorldModel {
 
 	private String message;
 
-	public HelloWorldBean(String message) {
+	public HelloWorldModel(String message) {
 		this.message = message;
 	}
 

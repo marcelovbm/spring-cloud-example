@@ -3,7 +3,7 @@ package com.example.restfull.websrevices.restfullwebservices.controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.restfull.websrevices.restfullwebservices.bean.HelloWorldBean;
+import com.example.restfull.websrevices.restfullwebservices.model.HelloWorldModel;
 
 @RestController
 public class HellorWorldController {
@@ -14,7 +14,7 @@ public class HellorWorldController {
 	}
 	
 	@GetMapping(path="/hello-world-bean")
-	public HelloWorldBean helloWorldBean() {
-		return new HelloWorldBean("Hello World!");
+	public HelloWorldModel helloWorldBean() {
+		return new HelloWorldModel("Hello World!");
 	}	
 }
