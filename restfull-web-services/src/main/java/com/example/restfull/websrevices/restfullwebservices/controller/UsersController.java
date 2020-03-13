@@ -1,9 +1,16 @@
 package com.example.restfull.websrevices.restfullwebservices.controller;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import java.net.URI;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,7 +49,7 @@ public class UsersController {
 	 * @return ResponseEntity
 	 */
 	@PostMapping(consumes = "application/json", produces = "application/json")
-	public ResponseEntity<Object> insertUser(@RequestBody UserModel user) {
+	public ResponseEntity<Object> insertUser(@Valid @RequestBody UserModel user) {
 		UserModel userSaved = userDao.save(user);
 
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(userSaved.getId())
@@ -54,13 +61,13 @@ public class UsersController {
 	@DeleteMapping(path = "/{id}")
 	public ResponseEntity<Object> deleteUser(@PathVariable Integer id) {
 		boolean removed = userDao.deleteUser(id);
-		
+
 		if (!removed)
 			throw new UserNotFoundException("User not found with id " + id);
 
 		return ResponseEntity.noContent().build();
 	}
-	
+
 	/**
 	 * This method return to the client the User that is represented by the Id send
 	 * in the request.
@@ -69,13 +76,19 @@ public class UsersController {
 	 * @return {@link UserBean}
 	 */
 	@GetMapping(path = "/{id}", produces = "application/json")
-	public UserModel returnUser(@PathVariable Integer id) {
+	public EntityModel<UserModel> returnUser(@PathVariable Integer id) {
 		UserModel userBean = userDao.findUser(id);
 
 		if (userBean == null)
 			throw new UserNotFoundException("User not found with id " + id);
 
-		return userBean;
+		EntityModel<UserModel> model = new EntityModel<UserModel>(userBean);
+
+		WebMvcLinkBuilder linkTo = linkTo(methodOn(this.getClass()).returnAllUsers());
+		
+		model.add(linkTo.withRel("all-users"));
+		
+		return model;
 	}
 
 }
