@@ -56,4 +56,9 @@ public class UserDao {
 		users.add(user);
 		return user;
 	}
+
+	public boolean deleteUser(Integer id) {
+
+		return users.removeIf(user -> id.equals(user.getId()));
+	}
 }

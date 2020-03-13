@@ -17,7 +17,7 @@ public class UserModel {
 
 	@Override
 	public String toString() {
-		return "UserBean [id=" + id + ", name=" + name + ", birthDate=" + birthDate + "]";
+		return "UserModel [id=" + id + ", name=" + name + ", birthDate=" + birthDate + "]";
 	}
 
 	public Integer getId() {

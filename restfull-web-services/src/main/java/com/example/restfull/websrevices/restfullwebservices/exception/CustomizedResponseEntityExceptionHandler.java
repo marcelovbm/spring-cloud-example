@@ -3,30 +3,29 @@ package com.example.restfull.websrevices.restfullwebservices.exception;
 import java.util.Date;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @ControllerAdvice
-@RestController
 public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
-	@ExceptionHandler(Exception.class)
-	public final ResponseEntity<Object> handleAllException(Exception ex, WebRequest request) throws Exception {
+	@ResponseBody
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	@ExceptionHandler({ Exception.class })
+	public final ExceptionResonse handleAllInternalServerErrorException(Exception ex, WebRequest request) {
 
-		ExceptionResonse exceptionResponse = new ExceptionResonse(new Date(), ex.getMessage(),
-				request.getDescription(false));
-		return new ResponseEntity<Object>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ExceptionResonse(new Date(), ex.getMessage(), request.getDescription(false));
 	}
-	
-	@ExceptionHandler(UserNotFoundException.class)
-	public final ResponseEntity<Object> handleAllNotFoundException(Exception ex, WebRequest request) throws Exception {
 
-		ExceptionResonse exceptionResponse = new ExceptionResonse(new Date(), ex.getMessage(),
-				request.getDescription(false));
-		return new ResponseEntity<Object>(exceptionResponse, HttpStatus.NOT_FOUND);
+	@ResponseBody
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	@ExceptionHandler({ UserNotFoundException.class, PostsNotFoundException.class })
+	public final ExceptionResonse handleAllNotFoundException(Exception ex, WebRequest request) {
+
+		return new ExceptionResonse(new Date(), ex.getMessage(), request.getDescription(false));
 	}
 }
