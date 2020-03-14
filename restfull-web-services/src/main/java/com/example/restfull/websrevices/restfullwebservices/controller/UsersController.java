@@ -5,10 +5,13 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
@@ -38,8 +41,15 @@ public class UsersController {
 	 * @return List<UserBean>
 	 */
 	@GetMapping(produces = "application/json")
-	public List<UserModel> returnAllUsers() {
-		return userDao.findAll();
+	public ResponseEntity<CollectionModel<EntityModel<UserModel>>> returnAllUsers() {
+
+		List<EntityModel<UserModel>> users = StreamSupport.stream(userDao.findAll().spliterator(), false)
+				.map(user -> new EntityModel<>(user,
+						linkTo(methodOn(UsersController.class).returnUser(user.getId())).withSelfRel()))
+				.collect(Collectors.toList());
+
+		return ResponseEntity.ok(
+				new CollectionModel<>(users, linkTo(methodOn(UsersController.class).returnAllUsers()).withSelfRel()));
 	}
 
 	/**
@@ -82,12 +92,12 @@ public class UsersController {
 		if (userBean == null)
 			throw new UserNotFoundException("User not found with id " + id);
 
-		EntityModel<UserModel> model = new EntityModel<UserModel>(userBean);
+		EntityModel<UserModel> model = new EntityModel<>(userBean);
 
 		WebMvcLinkBuilder linkTo = linkTo(methodOn(this.getClass()).returnAllUsers());
-		
+
 		model.add(linkTo.withRel("all-users"));
-		
+
 		return model;
 	}
 

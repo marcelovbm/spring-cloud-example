@@ -3,6 +3,7 @@ package com.example.restfull.websrevices.restfullwebservices.dao;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
@@ -31,7 +32,7 @@ public class UserDao {
 	 * 
 	 * @return List<UserBean>
 	 */
-	public List<UserModel> findAll() {
+	public Collection<UserModel> findAll() {
 		return users;
 	}
 
