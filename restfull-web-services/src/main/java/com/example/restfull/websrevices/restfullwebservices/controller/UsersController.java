@@ -45,11 +45,11 @@ public class UsersController {
 
 		List<EntityModel<UserModel>> users = StreamSupport.stream(userDao.findAll().spliterator(), false)
 				.map(user -> new EntityModel<>(user,
-						linkTo(methodOn(UsersController.class).returnUser(user.getId())).withSelfRel()))
+						linkTo(methodOn(this.getClass()).returnUser(user.getId())).withSelfRel()))
 				.collect(Collectors.toList());
 
-		return ResponseEntity.ok(
-				new CollectionModel<>(users, linkTo(methodOn(UsersController.class).returnAllUsers()).withSelfRel()));
+		return ResponseEntity
+				.ok(new CollectionModel<>(users, linkTo(methodOn(this.getClass()).returnAllUsers()).withSelfRel()));
 	}
 
 	/**
@@ -86,19 +86,14 @@ public class UsersController {
 	 * @return {@link UserBean}
 	 */
 	@GetMapping(path = "/{id}", produces = "application/json")
-	public EntityModel<UserModel> returnUser(@PathVariable Integer id) {
+	public ResponseEntity<EntityModel<UserModel>> returnUser(@PathVariable Integer id) {
 		UserModel userBean = userDao.findUser(id);
 
 		if (userBean == null)
 			throw new UserNotFoundException("User not found with id " + id);
 
-		EntityModel<UserModel> model = new EntityModel<>(userBean);
-
-		WebMvcLinkBuilder linkTo = linkTo(methodOn(this.getClass()).returnAllUsers());
-
-		model.add(linkTo.withRel("all-users"));
-
-		return model;
+		return ResponseEntity
+				.ok(new EntityModel<>(userBean, linkTo(methodOn(this.getClass()).returnAllUsers()).withRel("users")));
 	}
 
 }
