@@ -21,7 +21,7 @@ public class UserModel {
 		this.name = name;
 		this.birthDate = birthDate;
 	}
-
+	
 	@Override
 	public String toString() {
 		return "UserModel [id=" + id + ", name=" + name + ", birthDate=" + birthDate + "]";

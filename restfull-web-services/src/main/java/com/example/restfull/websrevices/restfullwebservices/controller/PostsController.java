@@ -18,13 +18,13 @@ import com.example.restfull.websrevices.restfullwebservices.exception.PostsNotFo
 import com.example.restfull.websrevices.restfullwebservices.model.PostsModel;
 
 @RestController
-@RequestMapping(path = "/users/{userId}/posts")
+@RequestMapping(path = "/users/{userId}/posts", produces = "application/json")
 public class PostsController {
 
 	@Autowired
 	private PostsDao postsDao = new PostsDao();
 
-	@GetMapping(produces = "application/json")
+	@GetMapping()
 	public List<PostsModel> returnAllPosts(@PathVariable Integer userId) throws PostsNotFoundException {
 		List<PostsModel> postsList = postsDao.findAll(userId);
 
@@ -34,7 +34,7 @@ public class PostsController {
 		return postsList;
 	}
 
-	@PostMapping(produces = "application/json")
+	@PostMapping(consumes = "application/json")
 	public ResponseEntity<Object> save(@RequestBody PostsModel postsModel) {
 		PostsModel postsCreated = postsDao.save(postsModel);
 
@@ -45,7 +45,7 @@ public class PostsController {
 
 	}
 
-	@GetMapping(path = "/{postsId}", produces = "application/json")
+	@GetMapping(path = "/{postsId}")
 	public PostsModel returnPostsDetail(@PathVariable Integer userId, @PathVariable Integer postsId)
 			throws PostsNotFoundException {
 

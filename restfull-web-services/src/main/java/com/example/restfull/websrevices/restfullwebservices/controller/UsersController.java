@@ -11,9 +11,7 @@ import java.util.stream.StreamSupport;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +27,7 @@ import com.example.restfull.websrevices.restfullwebservices.exception.UserNotFou
 import com.example.restfull.websrevices.restfullwebservices.model.UserModel;
 
 @RestController
-@RequestMapping(path = "/users")
+@RequestMapping(path = "/users", produces = "application/json")
 public class UsersController {
 
 	@Autowired
@@ -40,16 +38,15 @@ public class UsersController {
 	 * 
 	 * @return List<UserBean>
 	 */
-	@GetMapping(produces = "application/json")
-	public ResponseEntity<CollectionModel<EntityModel<UserModel>>> returnAllUsers() {
+	@GetMapping()
+	public ResponseEntity<List<EntityModel<UserModel>>> returnAllUsers() {
 
 		List<EntityModel<UserModel>> users = StreamSupport.stream(userDao.findAll().spliterator(), false)
 				.map(user -> new EntityModel<>(user,
 						linkTo(methodOn(this.getClass()).returnUser(user.getId())).withSelfRel()))
 				.collect(Collectors.toList());
 
-		return ResponseEntity
-				.ok(new CollectionModel<>(users, linkTo(methodOn(this.getClass()).returnAllUsers()).withSelfRel()));
+		return ResponseEntity.ok(users);
 	}
 
 	/**
@@ -58,7 +55,7 @@ public class UsersController {
 	 * @param user User that is going to be saved in the db.
 	 * @return ResponseEntity
 	 */
-	@PostMapping(consumes = "application/json", produces = "application/json")
+	@PostMapping(consumes = "application/json")
 	public ResponseEntity<Object> insertUser(@Valid @RequestBody UserModel user) {
 		UserModel userSaved = userDao.save(user);
 
@@ -85,7 +82,7 @@ public class UsersController {
 	 * @param id Identification of the user.
 	 * @return {@link UserBean}
 	 */
-	@GetMapping(path = "/{id}", produces = "application/json")
+	@GetMapping(path = "/{id}")
 	public ResponseEntity<EntityModel<UserModel>> returnUser(@PathVariable Integer id) {
 		UserModel userBean = userDao.findUser(id);
 

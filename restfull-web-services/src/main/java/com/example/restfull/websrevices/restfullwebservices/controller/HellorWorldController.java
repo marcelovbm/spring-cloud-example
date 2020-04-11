@@ -7,16 +7,16 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.restfull.websrevices.restfullwebservices.model.HelloWorldModel;
 
 @RestController
-@RequestMapping(path="hello-world")
+@RequestMapping(path = "hello-world", produces = "application/json")
 public class HellorWorldController {
 
 	@GetMapping()
 	public String helloWorld() {
 		return "Hello Woorld";
 	}
-	
-	@GetMapping(path="/bean")
+
+	@GetMapping(path = "/bean")
 	public HelloWorldModel helloWorldBean() {
 		return new HelloWorldModel("Hello World!");
-	}	
+	}
 }
